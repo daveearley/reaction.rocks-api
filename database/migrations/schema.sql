@@ -34,7 +34,7 @@ CREATE TABLE "campaigns" (
   "emojis" varchar(50),
   "emoji_titles" varchar (255),
   "show_stats" boolean,
-  "stats_display_type" varchar (32), /* percent, number */
+  "stats_display_type" varchar (32), /* percent or number */
   "has_reactions" boolean default false not null,
   "button_background_color" varchar(7) null,
   "button_text_color" varchar(7) null,
