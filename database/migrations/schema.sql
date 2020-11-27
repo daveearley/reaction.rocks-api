@@ -36,9 +36,9 @@ CREATE TABLE "campaigns" (
   "show_stats" boolean,
   "stats_display_type" varchar (32), /* percent, number */
   "has_reactions" boolean default false not null,
-  "button_background_color" null varchar(7),
-  "button_text_color" null varchar(7),
-  "theme_color" null varchar(7),
+  "button_background_color" varchar(7) null,
+  "button_text_color" varchar(7) null,
+  "theme_color" varchar(7) null,
   "created_at" timestamp,
   "updated_at" timestamp,
   "deleted_at" timestamp
