@@ -22,9 +22,16 @@ interface ReactionRepositoryInterface extends RepositoryInterface
      *
      * @param int $campaignId
      * @param CarbonPeriod $period
+     * @param bool $isNpsCampaign
      * @return array
      */
-    public function getAverageAndCountForDateRange(int $campaignId, CarbonPeriod $period): array;
+    public function getAverageAndCountForDateRange(int $campaignId, CarbonPeriod $period, bool $isNpsCampaign): array;
 
+    /**
+     * Get the sum of reactions and average for a last 1, 7 & 30 days
+     *
+     * @param int $campaignId
+     * @return object|null
+     */
     public function getCountForLastXDaysAndAverageScore(int $campaignId): ?object;
 }

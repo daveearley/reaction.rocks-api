@@ -155,23 +155,12 @@ abstract class {$model} extends \\{$this->defaultExtends}
      */
     private function getType(Type $type): ?string
     {
-        switch (strtolower($type->getName())) {
-            case Type::INTEGER:
-            case Type::BIGINT:
-            case Type::SMALLINT:
-                $type = 'int';
-                break;
-            case Type::BOOLEAN:
-                $type = 'bool';
-                break;
-            case Type::DECIMAL:
-            case Type::FLOAT:
-                $type = 'float';
-                break;
-            default:
-                $type = 'string';
-                break;
-        }
+        $type = match (strtolower($type->getName())) {
+            Type::INTEGER, Type::BIGINT, Type::SMALLINT => 'int',
+            Type::BOOLEAN => 'bool',
+            Type::DECIMAL, Type::FLOAT => 'float',
+            default => 'string',
+        };
 
         return $type;
     }

@@ -74,26 +74,19 @@ class IpToCountryService implements IpToCountryServiceInterface
     {
         try {
             $record = $this->getCityReader()->city($this->ipAddress);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;
         }
 
-        switch ($recordType) {
-            case 'latitude':
-                return (string)$record->location->latitude;
-            case 'longitude':
-                return (string)$record->location->longitude;
-            case 'country':
-                return (string)$record->country->name;
-            case 'countryCode':
-                return (string)$record->country->isoCode;
-            case 'city':
-                return (string)$record->city->name;
-            case 'continent':
-                return (string)$record->continent->name;
-            default:
-                return null;
-        }
+        return match ($recordType) {
+            'latitude' => (string)$record->location->latitude,
+            'longitude' => (string)$record->location->longitude,
+            'country' => (string)$record->country->name,
+            'countryCode' => (string)$record->country->isoCode,
+            'city' => (string)$record->city->name,
+            'continent' => (string)$record->continent->name,
+            default => null,
+        };
     }
 
     /**

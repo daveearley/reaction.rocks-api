@@ -12,7 +12,6 @@ class CreateReactionAction extends BaseAction
     {
         return $this
             ->getResponseBuilder()
-            ->withCookie('rs_sbmt', $campaignId)
             ->withData($handler->execute($campaignId, $request->all()))
             ->createdResponse();
     }

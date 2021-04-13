@@ -5,6 +5,7 @@ namespace App\Http\Actions\Campaign;
 use App\Http\Actions\BaseAction;
 use App\Http\Request\Campaign\UpdateCampaignRequest;
 use App\Service\Handler\Campaign\UpdateCampaignHandler;
+use Illuminate\Http\Response;
 
 class UpdateCampaignAction extends BaseAction
 {
@@ -15,7 +16,7 @@ class UpdateCampaignAction extends BaseAction
         $this->handler = $handler;
     }
 
-    public function __invoke(UpdateCampaignRequest $request, int $campaignId)
+    public function __invoke(UpdateCampaignRequest $request, int $campaignId): Response
     {
         return $this
             ->getResponseBuilder()

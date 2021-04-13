@@ -1,4 +1,4 @@
-FROM php:7.4.0RC4-fpm-buster
+FROM php:8-fpm-buster
 
 EXPOSE 9001
 
@@ -12,7 +12,7 @@ RUN apt-get install -y libpq-dev git zip postgresql-client && \
     mkdir -p /usr/share/man/{man1,man7}
 
 # Xdebug
-ARG XDEBUG_VERSION=2.8.0beta1
+ARG XDEBUG_VERSION=3.0.1
 RUN mkdir -p /usr/src/php/ext/xdebug && \
     curl -fsSL https://xdebug.org/files/xdebug-${XDEBUG_VERSION}.tgz | tar xz -C /usr/src/php/ext/xdebug --strip 1 && \
     docker-php-ext-install xdebug

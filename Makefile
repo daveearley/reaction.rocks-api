@@ -4,6 +4,9 @@ php-user=www-data
 php-exec-command=docker-compose exec --user=${php-user} php-fpm
 user-group-id=USER_ID=`id -u` GROUP_ID=`id -g`
 
+package-for-eb:
+	zip ../code.zip -r * .[^.]* -x "vendor/*" -x "docker-data/*" -x "node_modules/*" -x ".git/*" -x ".idea/*"
+
 start-app:
 	${user-group-id} docker-compose up -d --force-recreate
 	sudo chmod -R 0777 ./storage ./bootstrap/cache

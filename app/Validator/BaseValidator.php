@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace App\Validator;
 
 use App\DomainObjects\Enums\BaseEnum;
-use Illuminate\Validation\Factory;
 use InvalidArgumentException;
 
 abstract class BaseValidator implements ValidatorInterface
 {
     protected array $data;
 
-    protected Factory $validator;
-
-    public function __construct(Factory $validator)
+    public function messages(): array
     {
-        $this->validator = $validator;
+        return [];
     }
 
     /**

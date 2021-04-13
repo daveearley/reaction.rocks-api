@@ -8,9 +8,6 @@ use App\Http\Request\BaseRequest;
 
 class UpdateAccountRequest extends BaseRequest
 {
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

@@ -3,6 +3,7 @@
 namespace App\Service\Handler\Reaction;
 
 use App\DomainObjects\CampaignDomainObject;
+use App\DomainObjects\Enums\CampaignTypeEnum;
 use App\DomainObjects\ReactionDomainObject;
 use App\Http\Actions\BaseAction;
 use App\Queue\Jobs\ReactionCreatedJob;
@@ -49,7 +50,7 @@ class CreateReactionHandler extends BaseAction
     {
         /** @var CampaignDomainObject $campaign */
         $campaign = $this->campaignRepository->findFirst($campaignId);
-        $emojis = explode(',', $campaign->getEmojis());
+        $emojis = $campaign->getEmojisArray();
         $emoji = $reactionData[ReactionDomainObject::EMOJI];
 
         if (!in_array($emoji, $emojis, true)) {
@@ -59,7 +60,7 @@ class CreateReactionHandler extends BaseAction
         }
 
         $reactionData[ReactionDomainObject::CLIENT_IP] = $this->request->getClientIp();
-        $reactionData[ReactionDomainObject::SCORE] = array_search($reactionData[ReactionDomainObject::EMOJI], $emojis, true) + 1;
+        $reactionData[ReactionDomainObject::SCORE] = $this->getScore($emoji, $campaign);
         $reactionData[ReactionDomainObject::CAMPAIGN_ID] = $campaignId;
         $reactionData[ReactionDomainObject::COUNTRY_CODE] = $this->ipToCountryService->getCountryCode();
         $reactionData[ReactionDomainObject::CLIENT_IDENTIFIER] = $this->sessionIdentifierService->getIdentifier();
@@ -77,6 +78,16 @@ class CreateReactionHandler extends BaseAction
         $this->dispatch(new ReactionCreatedJob($reaction));
 
         return $reaction;
+    }
+
+    private function getScore(string $selectedEmoji, CampaignDomainObject $campaign): int
+    {
+        $score = array_search($selectedEmoji, $campaign->getEmojisArray(), true);
+        if ($campaign->getType() === CampaignTypeEnum::NPS) {
+            return $score;
+        }
+
+        return ++$score;
     }
 
     private function getReferer(array $reactionData)

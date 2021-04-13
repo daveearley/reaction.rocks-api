@@ -22,7 +22,7 @@ class ReactionRepository extends BaseRepository implements ReactionRepositoryInt
             $dateRange = sprintf(
                 "and created_at between '%s' and '%s'",
                 $fromDate->format('Y-m-d'),
-                $toDate->format('Y-m-d')
+                $toDate->addDay()->format('Y-m-d')
             );
         }
 
@@ -37,10 +37,18 @@ SQL;
         return $this->db->select($sql);
     }
 
-    public function getAverageAndCountForDateRange(int $campaignId, CarbonPeriod $period): array
+    public function getAverageAndCountForDateRange(int $campaignId, CarbonPeriod $period, bool $isNpsCampaign): array
     {
+        $npsClause = $isNpsCampaign ? "
+                       CAST(((
+                         SUM(CASE WHEN score BETWEEN 9 AND 10 THEN 1 ELSE 0 END) -
+                         SUM(CASE WHEN score BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
+                     ) / COUNT(*) * 100) AS int) as nps_score," : null;
+
+        $npsSelect = $isNpsCampaign ? ', nps_score' : '';
+
         $sql = <<<SQL
-            SELECT a.date, coalesce(average, 0) as average, coalesce(count, 0) as count
+            SELECT a.date, coalesce(average, 0) as average, coalesce(count, 0) as count {$npsSelect}
             FROM (
                      SELECT d::date date
                      FROM generate_series
@@ -49,7 +57,10 @@ SQL;
                               , '1 day'::interval) d
                  ) a
                      LEFT OUTER JOIN (
-                SELECT round(avg(score), 2) as average, count(*) as count, created_at::date
+                SELECT round(avg(score), 2) as average,
+                       count(*) as count, 
+                       {$npsClause}
+                       created_at::date
                 FROM reactions
                 WHERE campaign_id = {$campaignId}
                 GROUP BY created_at::date
@@ -72,6 +83,12 @@ SQL;
                    sum(case when created_at > '{$last30}' then 1 else 0 end) AS reactions_last_30_days,
                    sum(case when created_at > '{$last7}' then 1 else 0 end) AS reactions_last_7_days,
                    sum(case when created_at > '{$lastDay}' then 1 else 0 end) AS reactions_last_day,
+                   CAST(((
+                      SUM(CASE WHEN score BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
+                      SUM(CASE WHEN score BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
+                    ) / COUNT(*) * 100) AS int) as nps,
+                   
+                   
                    round(avg(score), 2) as average_score
             FROM reactions
             WHERE campaign_id = {$campaignId}

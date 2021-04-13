@@ -7,8 +7,8 @@ use App\Validator\CampaignValidator;
 
 class UpdateCampaignRequest extends BaseRequest
 {
-    public function rules(CampaignValidator $campaignValidator): array
+    public function rules(): array
     {
-        return $campaignValidator->rules();
+        return (new CampaignValidator())->rules();
     }
 }

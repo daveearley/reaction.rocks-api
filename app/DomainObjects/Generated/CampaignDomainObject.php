@@ -34,7 +34,7 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
     public const ALLOWED_DOMAINS = 'allowed_domains';
 
     /** @var string */
-    public const TYPE = 'type';
+    public const DISPLAY_TYPE = 'display_type';
 
     /** @var string */
     public const HEADING = 'heading';
@@ -102,6 +102,15 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
     /** @var string */
     public const BUTTON_TEXT_COLOR = 'button_text_color';
 
+    /** @var string */
+    public const TYPE = 'type';
+
+    /** @var string */
+    public const IS_FOLLOW_UP_MANDATORY = 'is_follow_up_mandatory';
+
+    /** @var string */
+    public const ASK_FOLLOW_UP_QUESTION = 'ask_follow_up_question';
+
     /** @var int */
     protected int $id;
 
@@ -118,7 +127,7 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
     protected ?string $allowed_domains = null;
 
     /** @var string */
-    protected ?string $type = null;
+    protected ?string $display_type = null;
 
     /** @var string */
     protected ?string $heading = null;
@@ -186,6 +195,15 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
     /** @var string */
     protected ?string $button_text_color = null;
 
+    /** @var string */
+    protected ?string $type = null;
+
+    /** @var bool */
+    protected bool $is_follow_up_mandatory = true;
+
+    /** @var bool */
+    protected ?bool $ask_follow_up_question = true;
+
    /**
     * @return array
     */
@@ -197,7 +215,7 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
             'public_id' => $this->public_id ?? null,
             'name' => $this->name ?? null,
             'allowed_domains' => $this->allowed_domains ?? null,
-            'type' => $this->type ?? null,
+            'display_type' => $this->display_type ?? null,
             'heading' => $this->heading ?? null,
             'sub_heading' => $this->sub_heading ?? null,
             'start_behaviour' => $this->start_behaviour ?? null,
@@ -220,6 +238,9 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
             'has_reactions' => $this->has_reactions ?? null,
             'button_background_color' => $this->button_background_color ?? null,
             'button_text_color' => $this->button_text_color ?? null,
+            'type' => $this->type ?? null,
+            'is_follow_up_mandatory' => $this->is_follow_up_mandatory ?? null,
+            'ask_follow_up_question' => $this->ask_follow_up_question ?? null,
         ];
     }
     
@@ -319,12 +340,12 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
     }
 
    /**
-    * @param string $type
+    * @param string $display_type
     * @return self
     */
-    public function setType(?string $type): self
+    public function setDisplayType(?string $display_type): self
     {
-        $this->type = $type;
+        $this->display_type = $display_type;
 
         return $this;
     }
@@ -332,9 +353,9 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
    /**
     * @return string|null
     */
-    public function getType(): ?string
+    public function getDisplayType(): ?string
     {
-        return $this->type;
+        return $this->display_type;
     }
 
    /**
@@ -753,5 +774,62 @@ abstract class CampaignDomainObject extends \App\DomainObjects\AbstractDomainObj
     public function getButtonTextColor(): ?string
     {
         return $this->button_text_color;
+    }
+
+   /**
+    * @param string $type
+    * @return self
+    */
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+   /**
+    * @return string|null
+    */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+   /**
+    * @param bool $is_follow_up_mandatory
+    * @return self
+    */
+    public function setIsFollowUpMandatory(bool $is_follow_up_mandatory): self
+    {
+        $this->is_follow_up_mandatory = $is_follow_up_mandatory;
+
+        return $this;
+    }
+
+   /**
+    * @return bool
+    */
+    public function getIsFollowUpMandatory(): bool
+    {
+        return $this->is_follow_up_mandatory;
+    }
+
+   /**
+    * @param bool $ask_follow_up_question
+    * @return self
+    */
+    public function setAskFollowUpQuestion(?bool $ask_follow_up_question): self
+    {
+        $this->ask_follow_up_question = $ask_follow_up_question;
+
+        return $this;
+    }
+
+   /**
+    * @return bool|null
+    */
+    public function getAskFollowUpQuestion(): ?bool
+    {
+        return $this->ask_follow_up_question;
     }
 }

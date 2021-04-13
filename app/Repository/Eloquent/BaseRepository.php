@@ -243,7 +243,7 @@ abstract class BaseRepository implements RepositoryInterface
     private function getPaginationPerPag(?int $perPage): int
     {
         if (is_null($perPage)) {
-            $perPage = $_REQUEST['per_page'] ?? self::DEFAULT_PAGINATE_LIMIT;
+            $perPage = (int)($_REQUEST['per_page'] ?? self::DEFAULT_PAGINATE_LIMIT);
         }
 
         return (int)min($perPage, self::MAX_PAGINATE_LIMIT);
